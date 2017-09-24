@@ -36,4 +36,14 @@ public class ProductServiceImpl implements ProductService {
 	public Set<Product> getProductByFilter(Map<String, List<String>> fileParams) {
 		return repository.getProductsByFilter(fileParams);
 	}
+
+	@Override
+	public List<Product> getProductsByManufacturer(String manufacturer) {
+		return repository.getProductsByManufacturer(manufacturer);
+	}
+
+	@Override
+	public Set<Product> getProductByPriceFilter(Map<String, List<String>> priceRanges) {
+		return repository.getProductsByPriceFilter(priceRanges);
+	}
 }

@@ -58,8 +58,7 @@ public class InMemoryProductRepository implements ProductRepository {
 
 	@Override
 	public List<Product> getPrductsByCategory(String category) {
-		List<Product> getProducts = products.stream()
-				.filter(product -> product.getCategory().equals(category))
+		List<Product> getProducts = products.stream().filter(product -> product.getCategory().equals(category))
 				.collect(Collectors.toList());
 		return getProducts;
 	}
@@ -79,9 +78,9 @@ public class InMemoryProductRepository implements ProductRepository {
 				});
 			}
 		}
-		
+
 		if (criterias.contains("category")) {
-			for(String category : filterParams.get("category")) {
+			for (String category : filterParams.get("category")) {
 				productByCategory.addAll(this.getPrductsByCategory(category));
 			}
 		}
@@ -91,7 +90,21 @@ public class InMemoryProductRepository implements ProductRepository {
 
 	@Override
 	public List<Product> getProductsByManufacturer(String manufacturer) {
-		// TODO Auto-generated method stub
-		return null;
+		return products.stream().filter(product -> product.getManufacturer().equalsIgnoreCase(manufacturer))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Set<Product> getProductsByPriceFilter(Map<String, List<String>> pricesRange) {
+		List<String> prices = pricesRange.get("price");
+		BigDecimal low = new BigDecimal(200);
+		BigDecimal high = new BigDecimal(400);
+
+		System.out.println(Integer.valueOf(prices.get(0).substring(prices.get(0).indexOf('='))));
+
+		return products.stream()
+				.filter(product -> product.getUnitPrice().compareTo(low) > 0)
+				.filter(product -> product.getUnitPrice().compareTo(high) < 0)
+				.collect(Collectors.toSet());
 	}
 }
