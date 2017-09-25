@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,18 +52,20 @@ public class ProductController {
 		return "products";
 	}
 	
-//	@RequestMapping("/{category}/price/{PricesRange}")
-	@RequestMapping("/{category}/price")
+	@RequestMapping("/{category}/{price}")
 	public String filterProducts(Model model,
-			@PathVariable("category") String productCategory)//,
-//			@MatrixVariable(pathVar="PricesRange") Map<String, List<String>> pricesRange,
-//			@RequestParam("manufacturer") String manufacturer) {
-			{
-		Set<Product> filteredProducts = new HashSet<>();
-		filteredProducts.addAll(productService.getProductsByCategory(productCategory));
-//		filteredProducts.addAll(productService.getProductByPriceFilter(pricesRange));
-//		filteredProducts.addAll(productService.getProductsByManufacturer(manufacturer));
-		
+			@PathVariable("category") String productCategory,
+			@MatrixVariable(pathVar="price") Map<String, List<String>> pricesRange,
+			@RequestParam("manufacturer") String manufacturer) {
+
+		Set<Product> productsInPriceRange = new HashSet<>();
+		productsInPriceRange.addAll(productService.getProductByPriceFilter(pricesRange));
+
+		Set<Product> filteredProducts = productsInPriceRange.stream()
+				.filter(product -> productService.getProductsByCategory(productCategory).contains(product))
+				.filter(product -> productService.getProductsByManufacturer(manufacturer).contains(product))
+				.collect(Collectors.toSet());
+
 		model.addAttribute("products", filteredProducts);
 		
 		return "products";

@@ -1,11 +1,7 @@
 package com.packt.webstore.domain.repository.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -58,7 +54,7 @@ public class InMemoryProductRepository implements ProductRepository {
 
 	@Override
 	public List<Product> getPrductsByCategory(String category) {
-		List<Product> getProducts = products.stream().filter(product -> product.getCategory().equals(category))
+		List<Product> getProducts = products.stream().filter(product -> product.getCategory().equalsIgnoreCase(category))
 				.collect(Collectors.toList());
 		return getProducts;
 	}
@@ -96,15 +92,12 @@ public class InMemoryProductRepository implements ProductRepository {
 
 	@Override
 	public Set<Product> getProductsByPriceFilter(Map<String, List<String>> pricesRange) {
-		List<String> prices = pricesRange.get("price");
-		BigDecimal low = new BigDecimal(200);
-		BigDecimal high = new BigDecimal(400);
-
-		System.out.println(Integer.valueOf(prices.get(0).substring(prices.get(0).indexOf('='))));
+		BigDecimal low = new BigDecimal(pricesRange.getOrDefault("low", Collections.singletonList("200")).get(0));
+		BigDecimal high = new BigDecimal(pricesRange.getOrDefault("high", Collections.singletonList("400")).get(0));
 
 		return products.stream()
-				.filter(product -> product.getUnitPrice().compareTo(low) > 0)
-				.filter(product -> product.getUnitPrice().compareTo(high) < 0)
+				.filter(product -> product.getUnitPrice().compareTo(low) >= 0)
+				.filter(product -> product.getUnitPrice().compareTo(high) <= 0)
 				.collect(Collectors.toSet());
 	}
 }
