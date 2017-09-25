@@ -43,6 +43,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public void addProduct(Product product) {
+		repository.addProduct(product);
+	}
+
+	@Override
 	public Set<Product> getProductByPriceFilter(Map<String, List<String>> priceRanges) {
 		return repository.getProductsByPriceFilter(priceRanges);
 	}

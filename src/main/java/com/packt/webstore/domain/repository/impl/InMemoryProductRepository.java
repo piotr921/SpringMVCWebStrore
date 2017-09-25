@@ -91,6 +91,11 @@ public class InMemoryProductRepository implements ProductRepository {
 	}
 
 	@Override
+	public void addProduct(Product product) {
+		products.add(product);
+	}
+
+	@Override
 	public Set<Product> getProductsByPriceFilter(Map<String, List<String>> pricesRange) {
 		BigDecimal low = new BigDecimal(pricesRange.getOrDefault("low", Collections.singletonList("200")).get(0));
 		BigDecimal high = new BigDecimal(pricesRange.getOrDefault("high", Collections.singletonList("400")).get(0));
