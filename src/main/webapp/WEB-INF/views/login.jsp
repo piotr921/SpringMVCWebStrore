@@ -1,6 +1,6 @@
-<%@page pageEncoding="UTF-8" contentType="text/html; UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
@@ -30,21 +30,20 @@
                             <spring:message code="AbstractUserDetailsAuthenticationProvider.badCredentials"/><br/>
                         </div>
                     </c:if>
-                    <form action="<c:url value="/j_spring_security_check"></c:url> " method="post">
+                    <form action="<c:url value="/login"></c:url> " method="post">
                         <fieldset>
-                            <div class="form-control" placeholder=
-                            <spring:message code="login.form.userName.label"/>
-                                    name='j_username' type="text">
+                            <div class="form-group">
+                                <input class="form-control" placeholder=<spring:message code="login.form.userName.label"/> name='username' type="text">
                             </div>
-                            <div class="form-control" placeholder=
-                            <spring:message code="login.form.userPassword.label"/>
-                                    name='j_password' type="">
+                            <div class="form-group">
+                                <input class="form-control" placeholder=<spring:message code="login.form.password.label"/> name='password' value="">
                             </div>
                             <input class="btn btn-lg btn-success btn-block"
                                    type="submit" value=
                                    <spring:message code="login.form.button.label"/>
                             >
                         </fieldset>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
                 </div>
             </div>
