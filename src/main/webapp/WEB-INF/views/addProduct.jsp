@@ -21,7 +21,7 @@
     </div>
 </section>
 <section class="container">
-    <form:form modelAttribute="newProduct" class="form-horizontal">
+    <form:form modelAttribute="newProduct" class="form-horizontal" enctype="multipart/form-data">
         <fieldset>
             <legend>Add new product</legend>
             <div class="form-group">
@@ -88,6 +88,14 @@
                     <form:radiobutton path="condition" value="New"/> <spring:message code="addProduct.form.productState.New.label"/>
                     <form:radiobutton path="condition" value="Old"/><spring:message code="addProduct.form.productState.Old.label"/>
                     <form:radiobutton path="condition" value="Refurbished"/><spring:message code="addProduct.form.productState.Refurbished.label"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2" for="picture">
+                    <spring:message code="addProduct.form.picture.label"/>
+                </label>
+                <div class="col-lg-10">
+                    <form:input id="picture" path="picture" class="form:input-large"/>
                 </div>
             </div>
             <div class="form-group">

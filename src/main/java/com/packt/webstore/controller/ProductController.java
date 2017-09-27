@@ -1,5 +1,7 @@
 package com.packt.webstore.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.packt.webstore.domain.Product;
 import com.packt.webstore.service.ProductService;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/products")
@@ -86,10 +91,20 @@ public class ProductController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct,
-                                           BindingResult result) {
+                                           BindingResult result,
+                                           HttpServletRequest request) {
         String[] suppressedFields = result.getSuppressedFields();
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Attempt of binding suppressed fields: " + StringUtils.arrayToCommaDelimitedString(suppressedFields));
+        }
+        MultipartFile picture = newProduct.getPicture();
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        if (picture != null && !picture.isEmpty()){
+            try {
+                picture.transferTo(new File(rootDirectory + "resources\\images\\" + newProduct.getProductId() + ".png"));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed during saving picture.", e);
+            }
         }
         productService.addProduct(newProduct);
         return "redirect:/products";
