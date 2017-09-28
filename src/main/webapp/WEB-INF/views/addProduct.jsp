@@ -21,7 +21,7 @@
     </div>
 </section>
 <section class="container">
-    <form:form modelAttribute="newProduct" class="form-horizontal" enctype="multipart/form-data">
+    <form:form action="./upload?${_csrf.parameterName}=${_csrf.token}" method="post" modelAttribute="newProduct" class="form-horizontal" enctype="multipart/form-data">
         <fieldset>
             <legend>Add new product</legend>
             <div class="form-group">
@@ -95,7 +95,7 @@
                     <spring:message code="addProduct.form.picture.label"/>
                 </label>
                 <div class="col-lg-10">
-                    <form:input id="picture" path="picture" class="form:input-large"/>
+                    <form:input id="picture" path="picture" type="file" class="form:input-large"/>
                 </div>
             </div>
             <div class="form-group">
