@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.packt.webstore.domain.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductRepository {
 	List<Product> getAllProducts();
@@ -14,4 +15,5 @@ public interface ProductRepository {
 	Set<Product> getProductsByPriceFilter(Map<String, List<String>> pricesRange);
 	List<Product> getProductsByManufacturer(String manufacturer);
 	void addProduct(Product product);
+	void updateProductPicture(String id, MultipartFile picture);
 }

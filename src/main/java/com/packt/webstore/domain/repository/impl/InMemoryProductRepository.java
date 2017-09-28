@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.packt.webstore.domain.Product;
 import com.packt.webstore.domain.repository.ProductRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Repository
 public class InMemoryProductRepository implements ProductRepository {
@@ -93,6 +94,14 @@ public class InMemoryProductRepository implements ProductRepository {
 	@Override
 	public void addProduct(Product product) {
 		products.add(product);
+	}
+
+	@Override
+	public void updateProductPicture(String id, MultipartFile picture) {
+		Product productToUpdate = products.stream()
+				.filter(product -> product.getProductId().equalsIgnoreCase(id))
+				.findFirst().orElse(new Product());
+		productToUpdate.setPicture(picture);
 	}
 
 	@Override

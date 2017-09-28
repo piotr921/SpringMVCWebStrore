@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.packt.webstore.domain.Product;
 import com.packt.webstore.domain.repository.ProductRepository;
 import com.packt.webstore.service.ProductService;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -45,6 +46,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void addProduct(Product product) {
 		repository.addProduct(product);
+	}
+
+	@Override
+	public void updateProductPicture(String id, MultipartFile picture) {
+		repository.updateProductPicture(id, picture);
 	}
 
 	@Override

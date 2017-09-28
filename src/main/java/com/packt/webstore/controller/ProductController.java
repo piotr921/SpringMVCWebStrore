@@ -1,13 +1,7 @@
 package com.packt.webstore.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.packt.webstore.domain.Product;
+import com.packt.webstore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +9,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import com.packt.webstore.domain.Product;
-import com.packt.webstore.service.ProductService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -91,24 +89,51 @@ public class ProductController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct,
-                                           BindingResult result,
-                                           HttpServletRequest request) {
+                                           BindingResult result, Model model) {
         String[] suppressedFields = result.getSuppressedFields();
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Attempt of binding suppressed fields: " + StringUtils.arrayToCommaDelimitedString(suppressedFields));
         }
-        MultipartFile picture = newProduct.getPicture();
+        productService.addProduct(newProduct);
+        model.addAttribute("productToUpdate", newProduct);
+        return "upload";
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public String getAddNewUploadPictureForm(@ModelAttribute("productToUpdate") Product product, Model model, HttpServletRequest request) {
+
+        MultipartFile picture = product.getPicture();
         String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        if (picture != null && !picture.isEmpty()){
+        if (picture != null && !picture.isEmpty()) {
             try {
-                picture.transferTo(new File(rootDirectory + "resources\\images\\" + newProduct.getProductId() + ".png"));
+                System.out.println(rootDirectory + "resources\\images\\" + product.getProductId() + ".png");
+                picture.transferTo(new File(rootDirectory + "resources\\images\\" + product.getProductId() + ".png"));
             } catch (IOException e) {
                 throw new RuntimeException("Failed during saving picture.", e);
             }
         }
-        productService.addProduct(newProduct);
+//        model.addAttribute("productPicture", product);
+//        return "upload";
+        productService.updateProductPicture(product.getProductId(), picture);
         return "redirect:/products";
     }
+
+//    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+//    public String processUploadPicture(@ModelAttribute("productToUpdate") Product product,
+//                                       HttpServletRequest request) {
+//
+//        MultipartFile picture = product.getPicture();
+//        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+//        if (picture != null && !picture.isEmpty()) {
+//            try {
+//                picture.transferTo(new File(rootDirectory + "resources\\images\\" + product.getProductId() + ".png"));
+//            } catch (IOException e) {
+//                throw new RuntimeException("Failed during saving picture.", e);
+//            }
+//        }
+//        productService.updateProductPicture(product.getProductId(), picture);
+//        return "redirect:/products";
+//    }
 
     @InitBinder
     public void initializeBinder(WebDataBinder binder) {

@@ -30,7 +30,7 @@
                             <spring:message code="AbstractUserDetailsAuthenticationProvider.badCredentials"/><br/>
                         </div>
                     </c:if>
-                    <form action="<c:url value="/login"></c:url> " method="post">
+                    <form action="<c:url value="/login"></c:url>" method="post">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder=<spring:message code="login.form.userName.label"/> name='username' type="text">
