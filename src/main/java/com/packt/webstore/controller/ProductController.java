@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -89,32 +91,43 @@ public class ProductController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct,
-                                           BindingResult result, Model model) {
+                                           BindingResult result,
+                                           RedirectAttributes attributes) {
         String[] suppressedFields = result.getSuppressedFields();
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Attempt of binding suppressed fields: " + StringUtils.arrayToCommaDelimitedString(suppressedFields));
         }
         productService.addProduct(newProduct);
-        model.addAttribute("productToUpdate", newProduct);
-        return "upload";
+        attributes.addAttribute("productId", newProduct.getProductId());
+        return "redirect:/products/upload";
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
-    public String getAddNewUploadPictureForm(@ModelAttribute("productToUpdate") Product product, Model model, HttpServletRequest request) {
+    public String getUploadNewPictureForm(@ModelAttribute("productId") String productId,
+                                          Model model){
+        Product update = new Product();
+        model.addAttribute("productId", productId);
+        model.addAttribute("update", update);
+        return "upload";
+    }
 
-        MultipartFile picture = product.getPicture();
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public String getAddNewUploadPictureForm(@ModelAttribute("productId") String productId,
+                                             @ModelAttribute("update") Product update,
+                                             BindingResult result,
+                                             HttpServletRequest request) {
+
+        MultipartFile picture = update.getPicture();
         String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        System.out.println(rootDirectory + "resources\\images\\" + productId + ".png");
         if (picture != null && !picture.isEmpty()) {
             try {
-                System.out.println(rootDirectory + "resources\\images\\" + product.getProductId() + ".png");
-                picture.transferTo(new File(rootDirectory + "resources\\images\\" + product.getProductId() + ".png"));
+                picture.transferTo(new File(rootDirectory + "resources\\images\\" + productId + ".png"));
             } catch (IOException e) {
                 throw new RuntimeException("Failed during saving picture.", e);
             }
         }
-//        model.addAttribute("productPicture", product);
-//        return "upload";
-        productService.updateProductPicture(product.getProductId(), picture);
+        productService.updateProductPicture(productId, picture);
         return "redirect:/products";
     }
 

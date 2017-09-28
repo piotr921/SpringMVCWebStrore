@@ -9,12 +9,9 @@
 </head>
 <body>
 <section class="container">
-    <form:form modelAttribute="productToUpdate" class="form-horizontal">
+    <form:form modelAttribute="update" class="form-horizontal">
         <fieldset>
-            <legend>Add picture for:</legend>
-            <div class="col-md-5">
-                <h3>${productToUpdate.name}</h3>
-            </div>
+            <legend>Add picture</legend>
             <div class="form-group">
                 <label class="control-label col-lg-2" for="picture">
                     <spring:message code="addProduct.form.picture.label"/>
@@ -25,7 +22,7 @@
             </div>
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <input type="submit" id="btnAdd" class="btn btn-primary" value="Upload"/>
+                    <input type="submit" id="btnAdd" class="btn btn-primary" value="Add"/>
                 </div>
             </div>
         </fieldset>
