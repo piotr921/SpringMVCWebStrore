@@ -9,7 +9,7 @@
 </head>
 <body>
 <section class="container">
-    <form:form modelAttribute="update" class="form-horizontal">
+    <form:form modelAttribute="update" class="form-horizontal" enctype="multipart/form-data">
         <fieldset>
             <legend>Add picture</legend>
             <div class="form-group">

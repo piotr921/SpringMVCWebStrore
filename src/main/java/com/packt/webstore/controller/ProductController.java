@@ -119,10 +119,10 @@ public class ProductController {
 
         MultipartFile picture = update.getPicture();
         String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        System.out.println(rootDirectory + "resources\\images\\" + productId + ".png");
+        System.out.println(rootDirectory + "resources/images/" + productId + ".png");
         if (picture != null && !picture.isEmpty()) {
             try {
-                picture.transferTo(new File(rootDirectory + "resources\\images\\" + productId + ".png"));
+                picture.transferTo(new File(rootDirectory + "resources/images/" + productId + ".png"));
             } catch (IOException e) {
                 throw new RuntimeException("Failed during saving picture.", e);
             }
